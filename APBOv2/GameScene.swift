@@ -123,7 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let leaderboardButtonNode = MSButtonNode(imageNamed: "specialButton")
    // let polyniteEarned = (numPoints / 100)
     
-    let reviveButtonNode = MSButtonNode(imageNamed: "reviveButton-1")
+    let reviveButtonNode = MSButtonNode(imageNamed: "revivebutton-1")
     let reviveTimer = SKSpriteNode(imageNamed: "reviveTimer")
     let reviveTimerNumber = SKLabelNode(text: "5")
     
