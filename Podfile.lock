@@ -66,7 +66,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.2.0):
     - GoogleUtilities/Logger
-  - leveldb-library (1.22)
+  - leveldb-library (1.22.6)
   - nanopb (2.30907.0):
     - nanopb/decode (= 2.30907.0)
     - nanopb/encode (= 2.30907.0)
@@ -78,6 +78,7 @@ DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Database
   - Google-Mobile-Ads-SDK
+  - leveldb-library (~> 1.22.6)
 
 SPEC REPOS:
   trunk:
@@ -108,10 +109,10 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 1024b1a4dfbd7a0e92cb20d7e0a6f1fb66b449a4
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: d866834472f1324d080496bc67ab3ce5d0d46027
-  leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
 
-PODFILE CHECKSUM: 96a504ea5e13a2e6e872cbe932a2789f19ed7739
+PODFILE CHECKSUM: b2f66b9d1772aeea027619f3ca21dee5a2f2b44f
 
 COCOAPODS: 1.16.2

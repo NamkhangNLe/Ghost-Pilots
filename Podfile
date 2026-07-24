@@ -10,6 +10,10 @@ target 'APBOv2' do
   pod 'Firebase/Analytics'
   pod 'Google-Mobile-Ads-SDK'
 
+  # Pin leveldb to a release that ships PrivacyInfo.xcprivacy (added in 1.22.5)
+  # so App Store submission passes the ITMS-91061 privacy-manifest check.
+  pod 'leveldb-library', '~> 1.22.6'
+
 end
 
 post_install do |installer|
