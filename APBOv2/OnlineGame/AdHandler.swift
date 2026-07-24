@@ -7,12 +7,12 @@ import AdSupport
 public class AdHandler {
     // Trach the ads preloaded
     private var appOpen: GADAppOpenAd?
-    private var interstitialImage: GADInterstitialAdBeta?
-    private var interstitialGeneral: GADInterstitialAdBeta?
-    private var interstitialVideo: GADInterstitialAdBeta?
+    private var interstitialImage: GADInterstitialAd?
+    private var interstitialGeneral: GADInterstitialAd?
+    private var interstitialVideo: GADInterstitialAd?
     private var rewardedInterstitial: GADRewardedInterstitialAd?
-    public var rewarded: GADRewardedAdBeta?
-    public var rewardedRevive: GADRewardedAdBeta?
+    public var rewarded: GADRewardedAd?
+    public var rewardedRevive: GADRewardedAd?
     
     // Track the AD IDs for each ad type
     private var bannerID: String?
@@ -68,12 +68,12 @@ public class AdHandler {
             self.isReady = true
             
             if let appOpenID = self.appOpenID, !appOpenID.isEmpty {
-                GADAppOpenAd.load(withAdUnitID: appOpenID, request: GADRequest(), orientation: UIInterfaceOrientation.landscapeRight, completionHandler: { [self] ad, error in
+                GADAppOpenAd.load(withAdUnitID: appOpenID, request: GADRequest(), completionHandler: { [self] ad, error in
                     appOpen = ad
                 })
             }
             self.loadRewardedForRevive()
-//            GADRewardedAdBeta.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
+//            GADRewardedAd.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
 //                if error == nil{
 //                    rewardedRevive = ad
 //                    rewardedRevive?.fullScreenContentDelegate = controller
@@ -81,16 +81,16 @@ public class AdHandler {
 //                }
 //            })
             
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialVideoID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialVideoID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialVideo = ad
                 
             })
             
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialImageID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialImageID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialImage = ad
             })
             
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialGeneral = ad
             })
             
@@ -117,7 +117,7 @@ public class AdHandler {
                     }
                 }
                 self.interstitialGeneral!.present(fromRootViewController: self.controller!)
-                GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+                GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                     interstitialGeneral = ad
                 })
                 print("middle")
@@ -132,7 +132,7 @@ public class AdHandler {
                 }
             }
             self.interstitialGeneral!.present(fromRootViewController: self.controller!)
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialGeneral = ad
             })
             print("middle")
@@ -148,7 +148,7 @@ public class AdHandler {
                     return
                 }
                 self.interstitialImage?.present(fromRootViewController: self.controller!)
-                GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+                GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                     interstitialImage = ad
                 })
             })
@@ -157,7 +157,7 @@ public class AdHandler {
                 return
             }
             self.interstitialImage?.present(fromRootViewController: self.controller!)
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialImage = ad
             })
         }
@@ -175,7 +175,7 @@ public class AdHandler {
                     }
                 }
                 self.interstitialVideo!.present(fromRootViewController: self.controller!)
-                GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+                GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                     interstitialVideo = ad
                 })
             })
@@ -188,7 +188,7 @@ public class AdHandler {
                 }
             }
             self.interstitialVideo!.present(fromRootViewController: self.controller!)
-            GADInterstitialAdBeta.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADInterstitialAd.load(withAdUnitID: self.interstitialGeneralID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 interstitialVideo = ad
             })
         }
@@ -210,7 +210,7 @@ public class AdHandler {
         if #available(iOS 14, *) {
             print("hii")
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-                GADRewardedAdBeta.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
+                GADRewardedAd.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
                     rewardedRevive = ad
                     rewardedRevive?.fullScreenContentDelegate = controller
                     isReviveLoaded = true
@@ -227,7 +227,7 @@ public class AdHandler {
                 })
             })
         } else {
-            GADRewardedAdBeta.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADRewardedAd.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 rewardedRevive = ad
                 rewardedRevive?.fullScreenContentDelegate = controller
                 isReviveLoaded = true
@@ -249,7 +249,7 @@ public class AdHandler {
         if #available(iOS 14, *) {
             print("hii")
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-                GADRewardedAdBeta.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
+                GADRewardedAd.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
                     rewardedRevive = ad
                     rewardedRevive?.fullScreenContentDelegate = controller
                     isReviveLoaded = true
@@ -266,7 +266,7 @@ public class AdHandler {
                 })
             })
         } else {
-            GADRewardedAdBeta.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
+            GADRewardedAd.load(withAdUnitID: self.rewardedReviveID!, request: GADRequest(), completionHandler: { [self] ad, error in
                 rewardedRevive = ad
                 rewardedRevive?.fullScreenContentDelegate = controller
                 isReviveLoaded = true
@@ -293,7 +293,7 @@ public class AdHandler {
             }
         }
         appOpen!.present(fromRootViewController: controller!)
-        GADAppOpenAd.load(withAdUnitID: appOpenID!, request: GADRequest(), orientation: UIInterfaceOrientation.landscapeRight, completionHandler: { [self] ad, error in
+        GADAppOpenAd.load(withAdUnitID: appOpenID!, request: GADRequest(), completionHandler: { [self] ad, error in
             appOpen = ad
         })
     }

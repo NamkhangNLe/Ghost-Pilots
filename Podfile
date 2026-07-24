@@ -6,12 +6,16 @@ target 'APBOv2' do
   use_frameworks!
 
   # Pods for APBOv2
-  pod 'Firebase/Database'
-  pod 'Firebase/Analytics'
-  pod 'Google-Mobile-Ads-SDK'
+  # Firebase 10.x and Google Mobile Ads 11.x are the first releases that ship
+  # PrivacyInfo.xcprivacy for all their bundled SDKs (FirebaseCore,
+  # GoogleUtilities, GoogleDataTransport, nanopb, FBLPromises, etc.), which is
+  # required to pass App Store submission check ITMS-91061. Both still support
+  # the iOS 12 deployment target.
+  pod 'Firebase/Database', '~> 10.29'
+  pod 'Firebase/Analytics', '~> 10.29'
+  pod 'Google-Mobile-Ads-SDK', '~> 11.13'
 
-  # Pin leveldb to a release that ships PrivacyInfo.xcprivacy (added in 1.22.5)
-  # so App Store submission passes the ITMS-91061 privacy-manifest check.
+  # leveldb ships its manifest as of 1.22.5; Firebase's ~> 1.22 permits this.
   pod 'leveldb-library', '~> 1.22.6'
 
 end

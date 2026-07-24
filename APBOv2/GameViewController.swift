@@ -25,7 +25,7 @@ public class GameViewController: UIViewController, GKGameCenterControllerDelegat
             print("reviveready1")
             Global.gameData.isReviveReady2 = true
         }
-        GADRewardedAdBeta.load(withAdUnitID: Global.adHandler.rewardedID!, request: GADRequest(), completionHandler: {
+        GADRewardedAd.load(withAdUnitID: Global.adHandler.rewardedID!, request: GADRequest(), completionHandler: {
             ad, error in
             Global.adHandler.rewarded = ad
         })
