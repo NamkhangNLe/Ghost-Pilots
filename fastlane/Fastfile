@@ -1,0 +1,120 @@
+default_platform(:ios)
+
+WORKSPACE = "APBOv2.xcworkspace"
+SCHEME = "APBOv2"
+# Only the keys in this file are changed; the rest of the age rating stays as set
+# in App Store Connect. Advertising must be true because the app shows AdMob ads.
+AGE_RATING = File.expand_path("age_rating.json", __dir__)
+
+platform :ios do
+  # Uses an App Store Connect API key when ASC_KEY_ID, ASC_ISSUER_ID, and
+  # ASC_KEY_PATH are set; otherwise fastlane falls back to Apple ID sign-in.
+  before_all do
+    if ENV["ASC_KEY_ID"] && ENV["ASC_ISSUER_ID"] && ENV["ASC_KEY_PATH"]
+      app_store_connect_api_key(
+        key_id: ENV["ASC_KEY_ID"],
+        issuer_id: ENV["ASC_ISSUER_ID"],
+        key_filepath: ENV["ASC_KEY_PATH"]
+      )
+    end
+  end
+
+  desc "Check App Store Connect credentials and print the latest build number"
+  lane :check do
+    UI.message("Latest TestFlight build: #{latest_testflight_build_number(app_identifier: 'edu.astroparty', initial_build_number: 0)}")
+  end
+
+  desc "Install pods and build a signed App Store archive"
+  lane :build do
+    cocoapods(repo_update: false)
+    # Automatic signing needs the API key to mint a profile that carries the
+    # Game Center entitlement; without it Xcode falls back to the wildcard
+    # team profile and the build fails.
+    auth_args = if ENV["ASC_KEY_ID"]
+      "-allowProvisioningUpdates " \
+        "-authenticationKeyPath #{ENV['ASC_KEY_PATH']} " \
+        "-authenticationKeyID #{ENV['ASC_KEY_ID']} " \
+        "-authenticationKeyIssuerID #{ENV['ASC_ISSUER_ID']}"
+    else
+      "-allowProvisioningUpdates"
+    end
+
+    build_app(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      configuration: "Release",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "build",
+      output_name: "GhostPilots.ipa",
+      xcargs: auth_args
+    )
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    build
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      skip_submission: true
+    )
+  end
+
+  desc "Build, upload, and submit the current version for App Review"
+  lane :release do
+    build
+    upload_to_app_store(
+      # Only the files under fastlane/metadata are sent; everything else on the
+      # listing (description, keywords, screenshots) stays as it is.
+      skip_metadata: false,
+      skip_screenshots: true,
+      app_rating_config_path: AGE_RATING,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: true,
+      automatic_release: false,
+      force: true,
+      submission_information: {
+        # No encryption beyond Apple's exempt uses (ITSAppUsesNonExemptEncryption is false).
+        export_compliance_uses_encryption: false,
+        # Google Mobile Ads serves ads and uses the advertising identifier.
+        add_id_info_uses_idfa: true,
+        add_id_info_serves_ads: true,
+        add_id_info_tracks_install: true,
+        add_id_info_tracks_action: false,
+        add_id_info_limits_tracking: true,
+        content_rights_contains_third_party_content: false
+      }
+    )
+  end
+
+  desc "Push metadata and age rating, then resubmit a rejected version with its current build"
+  lane :resubmit do
+    upload_to_app_store(
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      app_rating_config_path: AGE_RATING,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: false,
+      force: true
+    )
+
+    # deliver treats an UNRESOLVED_ISSUES submission as still in progress and
+    # refuses to submit, so resubmit the rejected one directly.
+    app = Spaceship::ConnectAPI::App.find("edu.astroparty")
+    submission = app.get_review_submissions(
+      filter: { state: "UNRESOLVED_ISSUES", platform: "IOS" }
+    ).first
+    UI.user_error!("No rejected review submission to resubmit") unless submission
+
+    # Rejected items must be marked resolved before the submission is accepted again.
+    items = Spaceship::ConnectAPI.get_review_submission_items(review_submission_id: submission.id).body["data"]
+    items.select { |item| item.dig("attributes", "state") == "REJECTED" }.each do |item|
+      Spaceship::ConnectAPI.client.tunes_request_client.patch("v1/reviewSubmissionItems/#{item['id']}", {
+        data: { type: "reviewSubmissionItems", id: item["id"], attributes: { resolved: true } }
+      })
+    end
+
+    submission.submit_for_review
+    UI.success("Resubmitted review submission #{submission.id} for App Review")
+  end
+end

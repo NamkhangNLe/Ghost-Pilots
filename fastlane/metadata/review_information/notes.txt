@@ -1,0 +1,5 @@
+This app was originally published under the Eden Prairie Schools developer account, where I built it as a student in the school's iOS App Development class. Ownership of the app was formally transferred to my developer account through App Store Connect's app transfer process (reference ID 29221100), so this is the same app under new ownership rather than a new or duplicate submission.
+
+This version updates the app for current iOS requirements: updated Firebase and Google Mobile Ads SDKs with privacy manifests, plus bug fixes.
+
+No sign-in is required to use the app. Game Center sign-in is optional and only affects leaderboard scores.

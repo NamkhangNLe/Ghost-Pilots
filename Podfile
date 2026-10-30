@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '12.0'
+platform :ios, '13.0'
 
 target 'APBOv2' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -9,8 +9,10 @@ target 'APBOv2' do
   # Firebase 10.x and Google Mobile Ads 11.x are the first releases that ship
   # PrivacyInfo.xcprivacy for all their bundled SDKs (FirebaseCore,
   # GoogleUtilities, GoogleDataTransport, nanopb, FBLPromises, etc.), which is
-  # required to pass App Store submission check ITMS-91061. Both still support
-  # the iOS 12 deployment target.
+  # required to pass App Store submission check ITMS-91061.
+  #
+  # The deployment target is iOS 13 because App Store Connect rejects uploads
+  # that target iOS 12 (error 90068).
   pod 'Firebase/Database', '~> 10.29'
   pod 'Firebase/Analytics', '~> 10.29'
   pod 'Google-Mobile-Ads-SDK', '~> 11.13'
@@ -24,7 +26,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
     end
   end
 end

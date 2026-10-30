@@ -1,0 +1,5 @@
+app_identifier("edu.astroparty")
+# Only needed when authenticating with an Apple ID instead of an API key.
+apple_id(ENV["FASTLANE_USER"]) if ENV["FASTLANE_USER"]
+team_id("DUXN239A3S")
+itc_team_id(ENV["FASTLANE_ITC_TEAM_ID"]) if ENV["FASTLANE_ITC_TEAM_ID"]
